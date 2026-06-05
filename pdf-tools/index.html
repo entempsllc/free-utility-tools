@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy-First PDF Merger | Merge PDFs Locally</title>
+    <meta name="description" content="Merge multiple PDF files securely in your browser. Zero cloud uploads. 100% private and free.">
+    <!-- AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9706598462382632" crossorigin="anonymous"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; background: #f9fafb; color: #1f2937; }
+        h1 { color: #111827; }
+        .tool-container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 1rem; }
+        .upload-area { border: 2px dashed #d1d5db; border-radius: 8px; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: border-color 0.2s; background: #f9fafb; margin-bottom: 1.5rem; }
+        .upload-area:hover { border-color: #3b82f6; }
+        .upload-area input[type="file"] { display: none; }
+        button { background: #2563eb; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%; font-size: 1.1rem; margin-top: 1rem; transition: background 0.2s; }
+        button:hover { background: #1d4ed8; }
+        button:disabled { background: #9ca3af; cursor: not-allowed; }
+        #fileList { list-style: none; padding: 0; margin-bottom: 1.5rem; }
+        #fileList li { background: #f3f4f6; padding: 0.75rem; border-radius: 4px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e5e7eb; }
+        .ad-placeholder { background: #e5e7eb; color: #6b7280; text-align: center; padding: 1rem; border-radius: 4px; margin-bottom: 2rem; font-size: 0.875rem; border: 1px dashed #9ca3af; }
+        .status { margin-top: 1rem; text-align: center; font-weight: 500; color: #166534; }
+        .badge { display: inline-block; background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: bold; margin-bottom: 1rem; }
+    </style>
+    <!-- Include pdf-lib from CDN -->
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+    <a href="../" style="color: #4b5563; text-decoration: none;">&larr; Back to Tools</a>
+    <div class="ad-placeholder" style="margin-top: 1rem;">AdSense Banner Area (728x90)</div>
+
+    <h1>Secure PDF Merger</h1>
+    <div class="badge">100% Local Processing</div>
+    <p>Combine multiple PDFs into a single file. Unlike other tools, <strong>your files are never uploaded to a server</strong>. The merging happens right here inside your browser, ensuring absolute privacy for your sensitive documents.</p>
+
+    <div class="tool-container">
+        <label class="upload-area" id="dropZone">
+            <span style="font-size: 2rem;">📄</span><br>
+            <strong>Click to select PDFs</strong> or drag and drop them here.<br>
+            <span style="font-size: 0.85rem; color: #6b7280;">(Select them in the order you want them merged)</span>
+            <input type="file" id="fileInput" multiple accept="application/pdf">
+        </label>
+
+        <ul id="fileList"></ul>
+
+        <button id="mergeBtn" disabled onclick="mergePDFs()">Merge PDFs</button>
+        <div id="statusMsg" class="status"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const mergeBtn = document.getElementById('mergeBtn');
+        const statusMsg = document.getElementById('statusMsg');
+        
+        let selectedFiles = [];
+
+        fileInput.addEventListener('change', (e) => {
+            const newFiles = Array.from(e.target.files);
+            selectedFiles = selectedFiles.concat(newFiles);
+            updateFileList();
+        });
+
+        function updateFileList() {
+            fileList.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${file.name}</span> <button style="width:auto; padding:0.2rem 0.5rem; margin:0; background:#ef4444;" onclick="removeFile(${index})">X</button>`;
+                fileList.appendChild(li);
+            });
+            mergeBtn.disabled = selectedFiles.length < 2;
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileList();
+            statusMsg.innerText = '';
+        }
+
+        async function mergePDFs() {
+            try {
+                mergeBtn.innerText = 'Merging...';
+                mergeBtn.disabled = true;
+                statusMsg.innerText = '';
+
+                const { PDFDocument } = PDFLib;
+                const mergedPdf = await PDFDocument.create();
+
+                for (let file of selectedFiles) {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdf = await PDFDocument.load(arrayBuffer);
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach((page) => mergedPdf.addPage(page));
+                }
+
+                const mergedPdfFile = await mergedPdf.save();
+                
+                // Create a download link and trigger it
+                const blob = new Blob([mergedPdfFile], { type: 'application/pdf' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Merged_Document_${new Date().getTime()}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                statusMsg.innerText = '✅ Merged successfully! Check your downloads folder.';
+            } catch (error) {
+                console.error(error);
+                statusMsg.innerText = '❌ Error merging PDFs. Ensure they are valid PDF files.';
+                statusMsg.style.color = '#b91c1c';
+            } finally {
+                mergeBtn.innerText = 'Merge PDFs';
+                mergeBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
