@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free ATS Resume Keyword Scanner | Match Job Descriptions</title>
+    <meta name="description" content="Free tool to check your resume against a job description. Find missing ATS keywords instantly. 100% private, runs entirely in your browser.">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 2rem; background: #f9fafb; color: #1f2937; }
+        h1 { color: #111827; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+        textarea { width: 100%; height: 300px; padding: 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-family: inherit; resize: vertical; box-sizing: border-box; }
+        button { background: #2563eb; color: white; border: none; padding: 1rem 2rem; border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%; font-size: 1.1rem; }
+        button:hover { background: #1d4ed8; }
+        #results { margin-top: 2rem; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: none; }
+        .keyword-tag { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; margin: 0.25rem; font-weight: 500; }
+        .found { background: #dcfce7; color: #166534; }
+        .missing { background: #fee2e2; color: #991b1b; }
+        .ad-placeholder { background: #e5e7eb; color: #6b7280; text-align: center; padding: 1rem; border-radius: 4px; margin-bottom: 2rem; font-size: 0.875rem; border: 1px dashed #9ca3af; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <a href="../" style="color: #4b5563; text-decoration: none;">&larr; Back to Tools</a>
+    <div class="ad-placeholder" style="margin-top: 1rem;">AdSense Banner Area (728x90)</div>
+
+    <h1>ATS Resume Keyword Scanner</h1>
+    <p>Paste your resume and the job description below. We'll extract the key terms from the job posting and tell you which ones your resume is missing. <strong>100% private: This tool runs entirely in your browser. No data is saved or uploaded.</strong></p>
+
+    <div class="grid">
+        <div>
+            <h3>Your Resume</h3>
+            <textarea id="resumeInput" placeholder="Paste your resume text here..."></textarea>
+        </div>
+        <div>
+            <h3>Job Description</h3>
+            <textarea id="jobInput" placeholder="Paste the job description here..."></textarea>
+        </div>
+    </div>
+
+    <button onclick="scanResume()">Scan Resume against Job Description</button>
+
+    <div id="results">
+        <h2>Scan Results</h2>
+        <p>Match Rate: <strong id="matchRate" style="font-size: 1.5rem;">0%</strong></p>
+        
+        <h3>Missing Keywords (Add these!)</h3>
+        <div id="missingKeywords"></div>
+
+        <h3 style="margin-top: 2rem;">Found Keywords</h3>
+        <div id="foundKeywords"></div>
+    </div>
+
+    <script>
+        // Very basic NLP stop words to ignore
+        const stopWords = new Set(['the','and','to','a','of','in','for','is','on','that','by','this','with','i','you','it','not','or','be','are','from','at','as','your','all','have','new','more','an','was','we','will','home','can','us','about','if','page','my','has','search','free','but','our','one','other','do','no','information','time','they','site','he','up','may','what','which','their','news','out','use','any','there','see','only','so','his','when','contact','here','business','who','web','also','now','help','get','pm','view','online','c','e','first','am','been','would','how','were','me','s','services','some','these','click','its','like','service','x','than','find','price','date','back','top','people','had','list','name','just','over','state','year','day','into','email','two','health','n','world','re','next','used','go','b','work','last','most','products','music','buy','data','make','them','should','product','system','post','her','city','t','add','policy','number','such','please','available','copyright','support','message','after','best','software','then','jan','good','video','well','d','where','info','rights','public','books','high','school','through','m','each','links','she','review','years','order','very','privacy','book','items','company','read','group','sex','need','many','user','said','de','does','set','under','general','research','university','january','mail','full','map','reviews','program','life','know','games','way','days','management','p','part','could','great','united','hotel','real','f','item','international','center','ebay','must','store','travel','comments','made','development','report','off','member','details','line','terms','law','custom','industry','experience','role','skills','looking','required','preferred','team','working','job','ability']);
+
+        function extractKeywords(text) {
+            // Clean text, lowercase, split by non-word characters
+            const words = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/);
+            
+            // Count frequencies, excluding stop words and short words
+            const counts = {};
+            words.forEach(word => {
+                if (word.length > 2 && !stopWords.has(word) && isNaN(word)) {
+                    counts[word] = (counts[word] || 0) + 1;
+                }
+            });
+
+            // Return top 40 keywords sorted by frequency
+            return Object.entries(counts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 40)
+                .map(entry => entry[0]);
+        }
+
+        function scanResume() {
+            const resumeText = document.getElementById('resumeInput').value.toLowerCase();
+            const jobText = document.getElementById('jobInput').value;
+            
+            if (!resumeText || !jobText) {
+                alert("Please paste both your resume and the job description.");
+                return;
+            }
+
+            const targetKeywords = extractKeywords(jobText);
+            
+            let found = [];
+            let missing = [];
+
+            targetKeywords.forEach(keyword => {
+                // Simple inclusion check. For production, regex word boundaries (\b) are better.
+                if (resumeText.includes(keyword)) {
+                    found.push(keyword);
+                } else {
+                    missing.push(keyword);
+                }
+            });
+
+            const matchPercentage = Math.round((found.length / targetKeywords.length) * 100);
+            
+            // Render
+            document.getElementById('matchRate').innerText = `${matchPercentage}%`;
+            document.getElementById('matchRate').style.color = matchPercentage > 75 ? '#166534' : matchPercentage > 50 ? '#ca8a04' : '#991b1b';
+
+            document.getElementById('foundKeywords').innerHTML = found.map(kw => `<span class="keyword-tag found">${kw}</span>`).join('');
+            document.getElementById('missingKeywords').innerHTML = missing.map(kw => `<span class="keyword-tag missing">${kw}</span>`).join('');
+            
+            document.getElementById('results').style.display = 'block';
+            
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
