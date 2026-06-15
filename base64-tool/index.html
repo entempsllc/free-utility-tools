@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Base64 Encoder/Decoder - Instant Tool</title>
+    <meta name="description" content="Free online Base64 encoder and decoder. Encode text to Base64 or decode Base64 to text instantly. Privacy-first, client-side only.">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; background: #f9fafb; }
+        h1 { color: #1f2937; }
+        textarea { width: 100%; height: 120px; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 8px; font-family: monospace; }
+        .buttons { display: flex; gap: 1rem; margin: 1rem 0; }
+        button { flex: 1; padding: 0.75rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+        .encode { background: #1d4ed8; color: white; }
+        .decode { background: #059669; color: white; }
+        button:hover { opacity: 0.9; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: #1d4ed8; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to Free Utility Tools</a>
+    <h1>Base64 Encoder/Decoder</h1>
+    <p>Encode text to Base64 or decode Base64 back to text.</p>
+    
+    <textarea id="input" placeholder="Enter text or Base64 string..."></textarea>
+    
+    <div class="buttons">
+        <button class="encode" onclick="encode()">Encode</button>
+        <button class="decode" onclick="decode()">Decode</button>
+    </div>
+    
+    <textarea id="output" placeholder="Result will appear here..."></textarea>
+
+    <script>
+        function encode() {
+            try {
+                document.getElementById('output').value = btoa(document.getElementById('input').value);
+            } catch(e) { alert('Invalid input for encoding'); }
+        }
+        function decode() {
+            try {
+                document.getElementById('output').value = atob(document.getElementById('input').value);
+            } catch(e) { alert('Invalid Base64 string'); }
+        }
+    </script>
+</body>
+</html>
