@@ -16,6 +16,10 @@
         .card h2 { margin-top: 0; color: #1d4ed8; font-size: 1.25rem; }
         .card p { margin-bottom: 0; font-size: 0.95rem; }
         .ad-placeholder { background: #e5e7eb; color: #6b7280; text-align: center; padding: 1rem; border-radius: 4px; margin-bottom: 2rem; font-size: 0.875rem; border: 1px dashed #9ca3af; }
+        .referral-welcome { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 2rem; }
+        .referral-welcome p { margin: 0 0 0.75rem; color: #1e3a8a; }
+        .referral-welcome a { display: inline-block; background: #1d4ed8; color: white; border-radius: 6px; padding: 0.65rem 1rem; font-weight: 600; text-decoration: none; }
+        .referral-welcome a:hover { background: #1e40af; }
     </style>
 </head>
 <body>
@@ -23,6 +27,11 @@
     
     <h1>Free Utility Tools</h1>
     <p>Fast, client-side tools that respect your privacy. No data leaves your browser.</p>
+
+    <aside id="portfolio-referral" class="referral-welcome" aria-labelledby="referral-title" hidden>
+        <p id="referral-title"><strong>Welcome from the Entemps portfolio.</strong> Need a quick place to begin?</p>
+        <a href="pdf-tools/">Merge PDFs privately in your browser</a>
+    </aside>
     
     <div class="grid">
         <a href="pdf-tools/" class="card">
@@ -50,5 +59,17 @@
             <p>Encode text to Base64 or decode Base64 to text instantly.</p>
         </a>
     </div>
+
+    <script>
+        const referral = new URLSearchParams(window.location.search);
+        const isPortfolioReferral =
+            referral.get('utm_source') === 'entempsllc.github.io' &&
+            referral.get('utm_medium') === 'portfolio_referral' &&
+            referral.get('utm_campaign') === 'portfolio_hub';
+
+        if (isPortfolioReferral) {
+            document.getElementById('portfolio-referral').hidden = false;
+        }
+    </script>
 </body>
 </html>
