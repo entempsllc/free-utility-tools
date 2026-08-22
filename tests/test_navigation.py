@@ -41,5 +41,13 @@ class ToolNavigationTests(unittest.TestCase):
                 self.assertNotIn(account_root, {urljoin(page_url, href) for href in parser.links})
 
 
+class PasswordGeneratorTrustTests(unittest.TestCase):
+    def test_secure_randomness_claim_uses_web_crypto(self):
+        source = (Path(__file__).parents[1] / "password-generator" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("crypto.getRandomValues", source)
+        self.assertNotIn("Math.random", source)
+        self.assertIn("Select at least one character type", source)
+
+
 if __name__ == "__main__":
     unittest.main()
