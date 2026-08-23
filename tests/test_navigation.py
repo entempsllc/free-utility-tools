@@ -49,5 +49,14 @@ class PasswordGeneratorTrustTests(unittest.TestCase):
         self.assertIn("Select at least one character type", source)
 
 
+class ResumeScannerCorrectnessTests(unittest.TestCase):
+    def test_matches_whole_keywords_and_handles_empty_keyword_set(self):
+        source = (Path(__file__).parents[1] / "resume-scanner" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("const resumeWords = new Set(tokenize(resumeText));", source)
+        self.assertIn("resumeWords.has(keyword)", source)
+        self.assertNotIn("resumeText.includes(keyword)", source)
+        self.assertIn("No meaningful keywords found", source)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -56,9 +56,12 @@
         // Very basic NLP stop words to ignore
         const stopWords = new Set(['the','and','to','a','of','in','for','is','on','that','by','this','with','i','you','it','not','or','be','are','from','at','as','your','all','have','new','more','an','was','we','will','home','can','us','about','if','page','my','has','search','free','but','our','one','other','do','no','information','time','they','site','he','up','may','what','which','their','news','out','use','any','there','see','only','so','his','when','contact','here','business','who','web','also','now','help','get','pm','view','online','c','e','first','am','been','would','how','were','me','s','services','some','these','click','its','like','service','x','than','find','price','date','back','top','people','had','list','name','just','over','state','year','day','into','email','two','health','n','world','re','next','used','go','b','work','last','most','products','music','buy','data','make','them','should','product','system','post','her','city','t','add','policy','number','such','please','available','copyright','support','message','after','best','software','then','jan','good','video','well','d','where','info','rights','public','books','high','school','through','m','each','links','she','review','years','order','very','privacy','book','items','company','read','group','sex','need','many','user','said','de','does','set','under','general','research','university','january','mail','full','map','reviews','program','life','know','games','way','days','management','p','part','could','great','united','hotel','real','f','item','international','center','ebay','must','store','travel','comments','made','development','report','off','member','details','line','terms','law','custom','industry','experience','role','skills','looking','required','preferred','team','working','job','ability']);
 
+        function tokenize(text) {
+            return text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+        }
+
         function extractKeywords(text) {
-            // Clean text, lowercase, split by non-word characters
-            const words = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/);
+            const words = tokenize(text);
             
             // Count frequencies, excluding stop words and short words
             const counts = {};
@@ -85,13 +88,17 @@
             }
 
             const targetKeywords = extractKeywords(jobText);
+            if (targetKeywords.length === 0) {
+                alert("No meaningful keywords found in the job description. Add more specific role or skill details.");
+                return;
+            }
+            const resumeWords = new Set(tokenize(resumeText));
             
             let found = [];
             let missing = [];
 
             targetKeywords.forEach(keyword => {
-                // Simple inclusion check. For production, regex word boundaries (\b) are better.
-                if (resumeText.includes(keyword)) {
+                if (resumeWords.has(keyword)) {
                     found.push(keyword);
                 } else {
                     missing.push(keyword);
