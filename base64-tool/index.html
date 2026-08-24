@@ -33,14 +33,20 @@
 
     <script>
         function encode() {
-            try {
-                document.getElementById('output').value = btoa(document.getElementById('input').value);
-            } catch(e) { alert('Invalid input for encoding'); }
+            const input = document.getElementById('input').value;
+            const bytes = new TextEncoder().encode(input);
+            let binary = '';
+            for (const byte of bytes) binary += String.fromCharCode(byte);
+            document.getElementById('output').value = btoa(binary);
         }
         function decode() {
             try {
-                document.getElementById('output').value = atob(document.getElementById('input').value);
-            } catch(e) { alert('Invalid Base64 string'); }
+                const binary = atob(document.getElementById('input').value);
+                const bytes = Uint8Array.from(binary, character => character.charCodeAt(0));
+                document.getElementById('output').value = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+            } catch(e) {
+                alert('Enter valid Base64 containing UTF-8 text.');
+            }
         }
     </script>
 </body>

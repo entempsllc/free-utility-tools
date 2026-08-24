@@ -58,5 +58,14 @@ class ResumeScannerCorrectnessTests(unittest.TestCase):
         self.assertIn("No meaningful keywords found", source)
 
 
+class Base64UnicodeCorrectnessTests(unittest.TestCase):
+    def test_uses_utf8_conversion_for_unicode_text(self):
+        source = (Path(__file__).parents[1] / "base64-tool" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("new TextEncoder().encode", source)
+        self.assertIn("new TextDecoder('utf-8', { fatal: true }).decode", source)
+        self.assertNotIn("btoa(document.getElementById('input').value)", source)
+        self.assertNotIn("document.getElementById('output').value = atob", source)
+
+
 if __name__ == "__main__":
     unittest.main()
