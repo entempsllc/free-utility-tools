@@ -37,7 +37,8 @@
             document.getElementById('words').textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
             document.getElementById('chars').textContent = text.length;
             document.getElementById('sentences').textContent = text.split(/[.!?]+/).filter(s => s.trim()).length;
-            document.getElementById('lines').textContent = text.split('\n').length;
+            const lineCount = text ? text.split('\n').length : 0;
+            document.getElementById('lines').textContent = lineCount;
         });
     </script>
 </body>

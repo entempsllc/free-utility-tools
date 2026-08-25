@@ -67,5 +67,12 @@ class Base64UnicodeCorrectnessTests(unittest.TestCase):
         self.assertNotIn("document.getElementById('output').value = atob", source)
 
 
+class WordCounterCorrectnessTests(unittest.TestCase):
+    def test_empty_text_has_zero_lines(self):
+        source = (Path(__file__).parents[1] / "word-counter" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("const lineCount = text ? text.split('\\n').length : 0;", source)
+        self.assertIn("document.getElementById('lines').textContent = lineCount;", source)
+
+
 if __name__ == "__main__":
     unittest.main()
