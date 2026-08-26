@@ -74,5 +74,16 @@ class WordCounterCorrectnessTests(unittest.TestCase):
         self.assertIn("document.getElementById('lines').textContent = lineCount;", source)
 
 
+class FreelanceRateCalculatorCorrectnessTests(unittest.TestCase):
+    def test_rejects_impossible_work_capacity_and_states_tax_boundary(self):
+        source = (Path(__file__).parents[1] / "calculators" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("weeksOff < 0 || weeksOff >= 52", source)
+        self.assertIn("billableHours <= 0", source)
+        self.assertIn("Enter 0–51 weeks off and more than 0 billable hours per week.", source)
+        self.assertIn("before personal income and self-employment taxes", source)
+        self.assertNotIn("Desired Annual Net Salary", source)
+        self.assertNotIn("tax overhead", source)
+
+
 if __name__ == "__main__":
     unittest.main()

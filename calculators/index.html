@@ -24,41 +24,41 @@
     <div class="ad-placeholder" style="margin-top: 1rem;">AdSense Banner Area (728x90)</div>
 
     <h1>Freelance Hourly Rate Calculator</h1>
-    <p>Don't just divide your desired salary by 2,000 hours. Freelancers have business expenses, unbillable admin time, and tax overhead. Calculate what you <em>actually</em> need to charge per hour to hit your goal.</p>
+    <p>Don't just divide your desired annual pay by 2,000 hours. Freelancers have business expenses and unbillable admin time. This calculator estimates a baseline rate before personal income and self-employment taxes; it does not provide tax advice.</p>
 
     <div class="calculator-container">
         <div class="input-group">
-            <label>Desired Annual Net Salary ($)
-                <span class="hint">What you want to take home after business expenses.</span>
+            <label>Desired Annual Pay Before Personal Taxes ($)
+                <span class="hint">What you want the business to provide after the entered business expenses, but before your personal taxes.</span>
             </label>
-            <input type="number" id="salary" value="80000" oninput="calculate()">
+            <input type="number" id="salary" value="80000" min="0" oninput="calculate()">
         </div>
 
         <div class="input-group">
             <label>Annual Business Expenses ($)
                 <span class="hint">Software, hardware, internet, marketing, health insurance, accounting, etc.</span>
             </label>
-            <input type="number" id="expenses" value="15000" oninput="calculate()">
+            <input type="number" id="expenses" value="15000" min="0" oninput="calculate()">
         </div>
 
         <div class="input-group">
             <label>Weeks Off Per Year
                 <span class="hint">Vacation days, sick days, and holidays (e.g., 4 weeks).</span>
             </label>
-            <input type="number" id="weeksOff" value="4" oninput="calculate()">
+            <input type="number" id="weeksOff" value="4" min="0" max="51" oninput="calculate()">
         </div>
 
         <div class="input-group">
             <label>Billable Hours Per Week
                 <span class="hint">Be realistic. You spend time emailing, invoicing, and marketing. Usually 20-30 hours are actually billable.</span>
             </label>
-            <input type="number" id="billableHours" value="25" oninput="calculate()">
+            <input type="number" id="billableHours" value="25" min="0.01" step="0.01" oninput="calculate()">
         </div>
 
         <div class="result-box">
             <div>Your Minimum Hourly Rate</div>
             <div class="rate" id="resultRate">$0</div>
-            <div style="color: #9ca3af; font-size: 0.9rem;">To make $<span id="displaySalary">0</span>/yr working <span id="displayHours">0</span> billable hours/wk.</div>
+            <div id="resultDetail" aria-live="polite" style="color: #9ca3af; font-size: 0.9rem;">To make $<span id="displaySalary">0</span>/yr working <span id="displayHours">0</span> billable hours/wk.</div>
         </div>
     </div>
 
@@ -68,6 +68,18 @@
             const expenses = parseFloat(document.getElementById('expenses').value) || 0;
             const weeksOff = parseFloat(document.getElementById('weeksOff').value) || 0;
             const billableHours = parseFloat(document.getElementById('billableHours').value) || 0;
+
+            if (salary < 0 || expenses < 0) {
+                document.getElementById('resultRate').innerText = '—';
+                document.getElementById('resultDetail').innerText = 'Salary and expenses cannot be negative.';
+                return;
+            }
+
+            if (weeksOff < 0 || weeksOff >= 52 || billableHours <= 0) {
+                document.getElementById('resultRate').innerText = '—';
+                document.getElementById('resultDetail').innerText = 'Enter 0–51 weeks off and more than 0 billable hours per week.';
+                return;
+            }
 
             const workingWeeks = 52 - weeksOff;
             const totalBillableHours = workingWeeks * billableHours;
@@ -80,8 +92,7 @@
             }
 
             document.getElementById('resultRate').innerText = '$' + rate.toFixed(2);
-            document.getElementById('displaySalary').innerText = salary.toLocaleString();
-            document.getElementById('displayHours').innerText = billableHours;
+            document.getElementById('resultDetail').innerHTML = `To make $<span id="displaySalary">${salary.toLocaleString()}</span>/yr working <span id="displayHours">${billableHours}</span> billable hours/wk.`;
         }
 
         // Init calculation on load
