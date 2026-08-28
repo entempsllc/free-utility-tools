@@ -85,5 +85,24 @@ class FreelanceRateCalculatorCorrectnessTests(unittest.TestCase):
         self.assertNotIn("tax overhead", source)
 
 
+class PdfMergerTrustTests(unittest.TestCase):
+    def test_local_processing_claim_and_implementation(self):
+        source = (Path(__file__).parents[1] / "pdf-tools" / "index.html").read_text(encoding="utf-8")
+        # Verify privacy claim
+        self.assertIn("100% Local Processing", source)
+        self.assertIn("your files are never uploaded to a server", source)
+        # Verify functional implementation (pdf-lib and local processing)
+        self.assertIn("pdf-lib@1.17.1", source)
+        self.assertIn("const mergedPdf = await PDFDocument.create();", source)
+        self.assertIn("await file.arrayBuffer();", source)
+        # Ensure no accidental form submission or cloud upload destination
+        self.assertNotIn("<form action=", source)
+        self.assertNotIn("fetch(", source)
+        self.assertNotIn("XMLHttpRequest", source)
+        # Verify "Clear All" exists
+        self.assertIn("clearFiles()", source)
+        self.assertIn("selectedFiles = [];", source)
+
+
 if __name__ == "__main__":
     unittest.main()
