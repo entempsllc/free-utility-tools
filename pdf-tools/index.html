@@ -22,9 +22,11 @@
         .ad-placeholder { background: #e5e7eb; color: #6b7280; text-align: center; padding: 1rem; border-radius: 4px; margin-bottom: 2rem; font-size: 0.875rem; border: 1px dashed #9ca3af; }
         .status { margin-top: 1rem; text-align: center; font-weight: 500; color: #166534; }
         .badge { display: inline-block; background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: bold; margin-bottom: 1rem; }
+        .secondary-btn { background: #6b7280; margin-top: 0.5rem; }
+        .secondary-btn:hover { background: #4b5563; }
     </style>
     <!-- Include pdf-lib from CDN -->
-    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 </head>
 <body>
     <a href="../" style="color: #4b5563; text-decoration: none;">&larr; Back to Tools</a>
@@ -45,6 +47,7 @@
         <ul id="fileList"></ul>
 
         <button id="mergeBtn" disabled onclick="mergePDFs()">Merge PDFs</button>
+        <button id="clearBtn" class="secondary-btn" onclick="clearFiles()">Clear All</button>
         <div id="statusMsg" class="status"></div>
     </div>
 
@@ -76,6 +79,13 @@
             selectedFiles.splice(index, 1);
             updateFileList();
             statusMsg.innerText = '';
+        }
+
+        function clearFiles() {
+            selectedFiles = [];
+            updateFileList();
+            statusMsg.innerText = '';
+            fileInput.value = '';
         }
 
         async function mergePDFs() {
