@@ -14,6 +14,9 @@
         .stat strong { display: block; font-size: 1.5rem; color: #1d4ed8; }
         .stat span { color: #6b7280; font-size: 0.875rem; }
         .back-link { display: inline-block; margin-bottom: 1rem; color: #1d4ed8; text-decoration: none; }
+        footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #e5e7eb; font-size: 0.875rem; color: #6b7280; }
+        footer a { color: #2563eb; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -29,6 +32,10 @@
         <div class="stat"><strong id="sentences">0</strong><span>Sentences</span></div>
         <div class="stat"><strong id="lines">0</strong><span>Lines</span></div>
     </div>
+
+    <footer>
+        <p>&copy; 2026 En Temps LLC. <a href="../privacy.html">Privacy Policy</a></p>
+    </footer>
 
     <script>
         const textArea = document.getElementById('text');

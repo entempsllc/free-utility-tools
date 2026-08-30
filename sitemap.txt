@@ -1,5 +1,8 @@
-https://entempsllc.github.io/
 https://entempsllc.github.io/free-utility-tools/
 https://entempsllc.github.io/free-utility-tools/pdf-tools/
 https://entempsllc.github.io/free-utility-tools/resume-scanner/
 https://entempsllc.github.io/free-utility-tools/calculators/
+https://entempsllc.github.io/free-utility-tools/word-counter/
+https://entempsllc.github.io/free-utility-tools/password-generator/
+https://entempsllc.github.io/free-utility-tools/base64-tool/
+https://entempsllc.github.io/free-utility-tools/privacy.html

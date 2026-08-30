@@ -2,44 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://entempsllc.github.io/free-utility-tools/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://entempsllc.github.io/free-utility-tools/pdf-tools/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://entempsllc.github.io/free-utility-tools/resume-scanner/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://entempsllc.github.io/free-utility-tools/calculators/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://entempsllc.github.io/free-utility-tools/word-counter/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://entempsllc.github.io/free-utility-tools/password-generator/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://entempsllc.github.io/free-utility-tools/base64-tool/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://entempsllc.github.io/free-utility-tools/privacy.html</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>
